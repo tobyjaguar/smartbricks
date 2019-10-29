@@ -824,7 +824,7 @@ contract SmartBricks is ERC165 {
     a[0] = msg.sender;
     a[1] = _dataResolver;
 
-    uint256[] memory i = new uint256[]5;
+    uint256[] memory i = new uint256[](5);
     i[0] = tokenId;
     i[1] = _collateral;
     i[2] = _lotSize;

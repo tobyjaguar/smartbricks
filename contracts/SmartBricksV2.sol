@@ -28,8 +28,8 @@ interface PaymentToken {
   function decimals() external returns (uint8);
 }
 
-import "openzeppelin-solidity/contracts/introspection/ERC165.sol";
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/introspection/ERC165.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 /** @title SmartBricks: A Smart Piggies Implementation
 */
