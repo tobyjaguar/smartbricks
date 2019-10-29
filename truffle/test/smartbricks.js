@@ -177,8 +177,7 @@ contract ('SmartPiggies', function(accounts) {
       isRequest = false
       zeroParam = 0
       currentBlock = web3.utils.toBN(0)
-
-
+      
       return piggyInstance.createPiggy(
         collateralERC,
         dataResolver,

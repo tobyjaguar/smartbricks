@@ -17,10 +17,10 @@ contract OracleResolver is ChainlinkClient {
   string public path; // data.priceUsd
   uint256 public tokenId;
 
-  bytes32 public jobId; //1b8ba62828ea4abbba0912a1bf297d25
+  bytes32 public jobId; // 1b8ba62828ea4abbba0912a1bf297d25
   uint256 public price;
   address public oracleAddress; // 0x89f70fA9F439dbd0A1BC22a09BEFc56adA04d9b4
-  address public LINKTokenAddress; //0x514910771af9ca656af840dff83e8264ecf986ca
+  address public LINKTokenAddress; // 0x514910771af9ca656af840dff83e8264ecf986ca
 
   mapping(bytes32 => address) public callers;
 
@@ -134,6 +134,23 @@ contract OracleResolver is ChainlinkClient {
     require(msg.sender == owner);
     path = _newPath;
     return true;
+  }
+
+  function stringToBytes32(string memory source)
+    public
+    pure
+    returns (bytes32 result)
+  {
+    bytes memory tempEmptyStringTest = bytes(source);
+    if (tempEmptyStringTest.length == 0) {
+        return 0x0;
+    }
+
+    assembly {
+        result := mload(add(source, 32))
+    }
+
+    return result;
   }
 
   function kill()
