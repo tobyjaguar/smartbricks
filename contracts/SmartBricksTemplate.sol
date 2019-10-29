@@ -610,14 +610,11 @@ contract SmartBricks is ERC165 {
     }
     //fetch data from dataResolver contract
     address _dataResolver;
-    if (piggies[_tokenId].flags.isEuro || (piggies[_tokenId].uintDetails.expiry < block.number))
+    if (!piggies[_tokenId].flags.isEuro && (block.number < piggies[_tokenId].uintDetails.expiry))
     {
-      _dataResolver = piggies[_tokenId].addresses.dataResolver; //changed from dataResolverAtExpiry
-    } else {
       require(msg.sender == piggies[_tokenId].addresses.holder, "only the holder can settle an American style option before expiry");
-      _dataResolver = piggies[_tokenId].addresses.dataResolver;
     }
-    require(_callResolver(_dataResolver, msg.sender, _oracleFee, _tokenId), "call to resolver did not return true");
+    require(_callResolver(piggies[_tokenId].addresses.dataResolver, msg.sender, _oracleFee, _tokenId), "call to resolver did not return true");
     return true;
   }
 
