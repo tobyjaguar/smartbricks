@@ -22,23 +22,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 pragma solidity >=0.4.24 <0.6.0;
 pragma experimental ABIEncoderV2;
 
-// massive thanks to ERC-721 spec for this D:
-
-// references to "oracles" could use a different / more general term
-// so that the spec could use signed data directly from "source" w/ same interface
-
 interface PaymentToken {
   function transferFrom(address from, address to, uint256 value) external returns (bool);
   function transfer(address to, uint256 value) external returns (bool);
   function decimals() external returns (uint8);
 }
 
-import "./ERC165.sol";
-import "./SafeMath.sol";
-//import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/introspection/ERC165.sol";
-//import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "openzeppelin-solidity/contracts/introspection/ERC165.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
-/** @title SmartPiggies: A Smart Option Standard
+/** @title SmartBricks: A Smart Piggies Implementation
 */
 contract SmartBricks is ERC165 {
   using SafeMath for uint256;
@@ -187,7 +180,7 @@ contract SmartBricks is ERC165 {
     public
   {
     //declarations here
-    owner = msg.sender; //so we can delete if from the testnet
+    owner = msg.sender;
   }
 
   /** @notice Create a new token
@@ -1007,6 +1000,20 @@ contract SmartBricks is ERC165 {
     piggies[_tokenId].flags.hasBeenCleared = false;
   }
 
+  function getOwner()
+    public
+    view
+    returns (address)
+  {
+    return owner;
+  }
+  function changeOwner(address payable _newAddress)
+    public
+    returns (bool)
+  {
+    require(msg.sender == owner);
+    owner = _newAddress;
+  }
   function kill()
     public
   {

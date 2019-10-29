@@ -91,9 +91,9 @@ contract SmartBricks is ERC165 {
   */
 
   event CreatePiggy(
-    address[] indexed addresses,
-    uint256[] indexed ints,
-    bool[] indexed bools
+    address[] addresses,
+    uint256[] ints,
+    bool[] bools
   );
 
   event TransferPiggy(
@@ -180,7 +180,7 @@ contract SmartBricks is ERC165 {
     public
   {
     //declarations here
-    owner = msg.sender; 
+    owner = msg.sender;
   }
 
   /** @notice Create a new token
@@ -824,11 +824,12 @@ contract SmartBricks is ERC165 {
     a[0] = msg.sender;
     a[1] = _dataResolver;
 
-    uint256[] memory i = new uint256[](4);
+    uint256[] memory i = new uint256[]5;
     i[0] = tokenId;
     i[1] = _collateral;
     i[2] = _lotSize;
-    i[1] = tokenExpiry;
+    i[3] = _strikePrice;
+    i[4] = tokenExpiry;
 
     bool[] memory b = new bool[](3);
     b[0] = _isEuro;
@@ -1006,7 +1007,7 @@ contract SmartBricks is ERC165 {
   {
     return owner;
   }
-  function changeOwner(address payable _newAddress) 
+  function changeOwner(address payable _newAddress)
     public
     returns (bool)
   {
