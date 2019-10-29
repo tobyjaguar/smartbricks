@@ -13,8 +13,8 @@ contract OracleResolver is ChainlinkClient {
   string public dataSource;
   string public underlying;
   string public oracle;
-  string public endpoint;
-  string public path;
+  string public endpoint; // https://api.coincap.io/v2/assets/ethereum
+  string public path; // data.priceUsd
   uint256 public tokenId;
 
   bytes32 public jobId; //1b8ba62828ea4abbba0912a1bf297d25
@@ -73,7 +73,7 @@ contract OracleResolver is ChainlinkClient {
     );
     Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.getPriceCallback.selector);
     req.add("get", endpoint);
-    req.add("path", "data.priceUsd");
+    req.add("path", path);
     req.addInt("times", 100);
     bytes32 requestId = sendChainlinkRequestTo(oracleAddress, req, _oracleFee);
     requests[requestId] = Request({
@@ -115,6 +115,24 @@ contract OracleResolver is ChainlinkClient {
   {
     require(msg.sender == owner);
     jobId = _newJobId;
+    return true;
+  }
+
+  function changeEndpoint(string _newEndpoint)
+    public
+    returns (bool)
+  {
+    require(msg.sender == owner);
+    endpoint = _newEndpoint;
+    return true;
+  }
+
+  function changePath(string _newPath)
+    public
+    returns (bool)
+  {
+    require(msg.sender == owner);
+    path = _newPath;
     return true;
   }
 
