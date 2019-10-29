@@ -1,5 +1,5 @@
 // Chainlink mainnet resolver
-pragma solidity >=0.4.24 <0.6.0;
+pragma solidity ^0.4.24;
 
 import "https://github.com/smartcontractkit/chainlink/blob/develop//evm/contracts/ChainlinkClient.sol";
 
@@ -36,7 +36,6 @@ contract OracleResolver is ChainlinkClient {
     string memory _oracleService,
     string memory _endpoint,
     string memory _path,
-    uint256 _price,
     address _oracleAddress,
     address _LinkTokenAddress
   )
