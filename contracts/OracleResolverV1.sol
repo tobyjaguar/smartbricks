@@ -48,7 +48,6 @@ contract OracleResolver is ChainlinkClient {
     jobId = "f291f8597d174f4aa1983b0e27ae160f";
     endpoint = _endpoint;
     path = _path;
-    price = _price;
     oracleAddress = _oracleAddress;
     LINKTokenAddress = _LinkTokenAddress;
     setChainlinkToken(_LinkTokenAddress);
