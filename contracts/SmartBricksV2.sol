@@ -36,6 +36,15 @@ import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/math/Saf
 contract SmartBricks is ERC165 {
   using SafeMath for uint256;
 
+  // Supported Interfaces
+  // 0xb99bd9b2 == this.createPiggy.selector ^
+  //  this.splitPiggy.selector ^ this.transferFrom.selector ^
+  //  this.updateRFP.selector ^ this.reclaimAndBurn.selector ^
+  //  this.startAuction.selector ^ this.endAuction.selector ^
+  //  this.satisfyAuction.selector ^ this.requestSettlementPrice.selector ^
+  //  this.settlePiggy.selector ^ this.claimPayout.selector;
+  bytes4 constant SMARTPIGGIES_INTERFACE = 0xb99bd9b2;
+
   address payable owner;
   uint256 public tokenId;
 
@@ -181,6 +190,7 @@ contract SmartBricks is ERC165 {
   {
     //declarations here
     owner = msg.sender;
+    _registerInterface(SMARTPIGGIES_INTERFACE);
   }
 
   /** @notice Create a new token
@@ -231,7 +241,7 @@ contract SmartBricks is ERC165 {
         address(this),
         _collateral
       );
-      require(success, "Token transfer did not complete");
+      require(success, "token transfer did not complete");
     }
     // any other checks that need to be performed specifically for RFPs ?
 
@@ -366,6 +376,7 @@ contract SmartBricks is ERC165 {
       expiryBlock = _expiry.add(block.number);
       piggies[_tokenId].uintDetails.expiry = expiryBlock;
     }
+    // Both must be specified
     piggies[_tokenId].flags.isEuro = _isEuro;
     piggies[_tokenId].flags.isPut = _isPut;
 
@@ -422,8 +433,7 @@ contract SmartBricks is ERC165 {
     require(piggies[_tokenId].uintDetails.expiry > _auctionExpiry, "auction cannot expire after the option");
     require(!piggies[_tokenId].flags.hasBeenCleared, "option cannot have been cleared");
     require(!auctions[_tokenId].auctionActive, "auction cannot already be running");
-    // as specified below, this is not needed if we change the function (as I have done) to accept an _auctionLength rather than a direct _auctionExpiry value
-    //require(_auctionExpiry > block.number, "auction must expire in the future");  // DO WE WANT TO ALSO ADD A BUFFER HERE? LIKE IT MUST EXPIRE AT LEAST XX BLOCKS IN THE FUTURE?
+
     if (piggies[_tokenId].flags.isRequest) {
       bool success = attemptPaymentTransfer(
         piggies[_tokenId].addresses.collateralERC,
@@ -465,7 +475,6 @@ contract SmartBricks is ERC165 {
     if (piggies[_tokenId].flags.isRequest) {
       // refund the _reservePrice premium
       uint256 _premiumToReturn = auctions[_tokenId].reservePrice;
-      //auctions[_tokenId].reservePrice = 0;  // this sort of offends my sensibilities because we only zero out one auction param, but it is the only one required to change for this logic to work
       PaymentToken(piggies[_tokenId].addresses.collateralERC).transfer(msg.sender, _premiumToReturn);
     }
     _clearAuctionDetails(_tokenId);
@@ -483,7 +492,6 @@ contract SmartBricks is ERC165 {
     require(auctions[_tokenId].auctionActive, "auction must be active to satisfy it");
     // if auction is "active" according to state but has expired, change state
     if (auctions[_tokenId].expiryBlock < block.number) {
-      //auctions[_tokenId].auctionActive = false;  // handled by _clearAuctionDetails now
       _clearAuctionDetails(_tokenId);
       return false;
     }
@@ -542,7 +550,7 @@ contract SmartBricks is ERC165 {
       bool success = attemptPaymentTransfer(
         piggies[_tokenId].addresses.collateralERC,
         msg.sender,
-        piggies[_tokenId].addresses.holder,  // should the SP contract escrow it first?
+        piggies[_tokenId].addresses.holder,
         _adjPremium
       );
       if (!success) {
@@ -587,19 +595,19 @@ contract SmartBricks is ERC165 {
         If the oracle doesn't need payment, include a positive garbage value
       @return The settlement price from the oracle to be used in `settleOption()`
    */
-  function requestSettlementPrice(uint256 _tokenId, uint256 _oracleFee) // this should be renamed perhaps, s.t. it is obvious that this is the "clearing phase"
+  function requestSettlementPrice(uint256 _tokenId, uint256 _oracleFee)
     public
     returns (bool)
   {
     require(msg.sender != address(0), "sender cannot be the zero address");
     //what check should be done to check that piggy is active?
     require(!auctions[_tokenId].auctionActive, "cannot clear a token while auction is active");
-    require(!piggies[_tokenId].flags.hasBeenCleared, "token has already been cleared");  // this is potentially problematic in the case of "garbage data"
+    require(!piggies[_tokenId].flags.hasBeenCleared, "token has already been cleared");
     require(_tokenId != 0, "_tokenId cannot be zero");
     require(_oracleFee != 0, "oracle fee cannot be zero");
     // check if Euro require past expiry
     if (piggies[_tokenId].flags.isEuro) {
-      require(piggies[_tokenId].uintDetails.expiry <= block.number);
+      require(piggies[_tokenId].uintDetails.expiry <= block.number, "cannot request a price on a European option before expiry");
     }
     // check if American and less than expiry, only holder can call
     if (!piggies[_tokenId].flags.isEuro && (block.number < piggies[_tokenId].uintDetails.expiry))
@@ -617,7 +625,7 @@ contract SmartBricks is ERC165 {
   )
     public
   {
-    require(msg.sender == piggies[_tokenId].addresses.dataResolver, "resolve address was not correct"); // MUST restrict a call to only the resolver address
+    require(msg.sender == piggies[_tokenId].addresses.dataResolver, "resolver calling address was not correct"); // MUST restrict a call to only the resolver address
     piggies[_tokenId].uintDetails.settlementPrice = _price;
     piggies[_tokenId].flags.hasBeenCleared = true;
 
