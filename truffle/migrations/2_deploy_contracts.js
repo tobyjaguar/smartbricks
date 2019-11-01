@@ -1,4 +1,5 @@
 const SmartBricks = artifacts.require('SmartBricks');
+const SmartPiggies = artifacts.require('SmartPiggies');
 const StableToken = artifacts.require('StableToken');
 const TestnetLINK = artifacts.require('TestnetLINK');
 const ResolverSelfReturn = artifacts.require('ResolverSelfReturn');
@@ -14,6 +15,7 @@ var oraclePrice = 27000
 
 module.exports = function(deployer) {
   deployer.deploy(SmartBricks, {gas: 8000000, gasPrice: 1100000000, overwrite: false});
+  deployer.deploy(SmartPiggies, {gas: 8000000, gasPrice: 1100000000, overwrite: false});
   deployer.deploy(StableToken, {gas: 3000000, gasPrice: 1100000000, overwrite: false});
   deployer.deploy(TestnetLINK, {gas: 3000000, gasPrice: 1100000000, overwrite: false})
   .then(() => {
