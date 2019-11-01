@@ -2,7 +2,7 @@ import { drizzleConnect } from 'drizzle-react'
 import React, { Children, Component } from 'react'
 import PropTypes from 'prop-types'
 
-import logo from '../../Assets/Logo/logo.png'
+import logo from '../../Assets/Logo/logo.jpeg'
 /*
  * Create component.
  */

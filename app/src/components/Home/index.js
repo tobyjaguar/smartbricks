@@ -41,7 +41,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Button from '@material-ui/core/Button';
 //import Icon from '@material-ui/core/Icon';
 
-import logo from '../../Assets/Logo/logo.png'
+import logo from '../../Assets/Logo/logo.jpeg'
 import ERC20Stats from '../ERC20Stats';
 import PiggyDetail from '../PiggyDetail'
 import SatisfyAuction from "../SatisfyAuction";
@@ -63,7 +63,8 @@ const appBar = {
 };
 
 const leftPane = {
-  backgroundColor: '#FFCBCB',
+  //backgroundColor: '#FFCBCB', CF967C
+  backgroundColor: '#C0814B',
   //height: 500,
   width: 300,
   margin: "1em",
@@ -74,7 +75,7 @@ const leftPane = {
 };
 
 const main = {
-  backgroundColor: '#FFCBCB',
+  backgroundColor: '#C0814B',
   //height: '60em', // COMMENT THIS OUT LATER WHEN THERE IS CONTENT TO PUT IN
   width: '50em',
   margin: '1em',
@@ -218,21 +219,23 @@ class Home extends Component {
         this.setState({
           ownedPiggies: this.props.SmartPiggies.getOwnedPiggies[this.state.dataKeyGetOwnedPiggies].value
         })
-        for (let i = 0; i < piggyIds.length; i++) {
-          //create data keys return array
-          piggyDataKeys.push(
-            {
-              value: this.contracts.SmartPiggies.methods['getDetails'].cacheCall(piggyIds[i]),
-              label: piggyIds[i]
-            }
-          )
-          //create Auction details data keys return array
-          piggyAuctionDataKeys.push(
-            {
-              value: this.contracts.SmartPiggies.methods['getAuctionDetails'].cacheCall(piggyIds[i]),
-              label: piggyIds[i]
-            }
-          )
+        if (piggyIds.length) {
+          for (let i = 0; i < piggyIds.length; i++) {
+            //create data keys return array
+            piggyDataKeys.push(
+              {
+                value: this.contracts.SmartPiggies.methods['getDetails'].cacheCall(piggyIds[i]),
+                label: piggyIds[i]
+              }
+            )
+            //create Auction details data keys return array
+            piggyAuctionDataKeys.push(
+              {
+                value: this.contracts.SmartPiggies.methods['getAuctionDetails'].cacheCall(piggyIds[i]),
+                label: piggyIds[i]
+              }
+            )
+          }
         }
 
         //set state
@@ -452,7 +455,7 @@ class Home extends Component {
                 {/**  Account + piggy information */}
                 <List>
                   <ListItem>
-                    <ListItemText primary="Piggies:" primaryTypographyProps={{variant: "h6"}} />
+                    <ListItemText primary="Bricks:" primaryTypographyProps={{variant: "h6"}} />
                     <Button variant="contained" color="primary" onClick={this.handleCreatePiggy}>Create New</Button>
                   </ListItem>
                 </List>
@@ -478,7 +481,7 @@ class Home extends Component {
                   <div>
                     <Paper style={{marginBottom: "10px"}}>
                       <Button variant="contained" onClick={this.handleHome} style={{marginRight: "10px"}}>Home</Button>
-                      <Button variant="contained" onClick={this.handleSearchAndBuy} style={{marginRight: "10px", marginTop: "15px", marginBottom: "15px"}}>Search and Buy Piggies</Button>
+                      <Button variant="contained" onClick={this.handleSearchAndBuy} style={{marginRight: "10px", marginTop: "15px", marginBottom: "15px"}}>Search and Buy Bricks</Button>
                       <Button variant="contained" onClick={this.handleClaimPayouts} style={{marginRight: "10px"}}>Claim Payouts</Button>
                       <Button variant="contained" onClick={this.handleApprovals} style={{marginRight: "10px"}}>Approvals</Button>
                       <Button variant="contained" onClick={this.handleFaucet} style={{marginRight: "10px"}}>Faucet</Button>
@@ -493,17 +496,17 @@ class Home extends Component {
                     <img src={logo} alt="drizzle-logo" />
                     <br></br>
                     <Typography variant="h4">
-                      Welcome to SmartPiggies!
+                      Welcome to SmartBricks!
                     </Typography>
                     <br></br>
                     <Divider light variant="middle" />
                     <br></br>
                     <Typography variant="h6">
-                      To get started, create a new SmartPiggy using the button below:
+                      To get started, create a new SmartBrick using the button below:
                     </Typography>
                     <br></br>
                     <Button variant="contained" color="primary" size="large" onClick={this.handleCreatePiggy}>
-                    Create New Piggy
+                    Create New Brick
                     {/* This Button uses a Font Icon, see the installation instructions in the docs. */}
                   </Button>
                   </div>
@@ -552,7 +555,7 @@ class Home extends Component {
                     <div>
                       <ExpansionPanel defaultExpanded={true}>
                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                          <Typography variant="h5">Core Piggy Details</Typography>
+                          <Typography variant="h5">Core Brick Details</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
                           <Typography variant="h6">Selected Token ID: {this.state.selectedPiggy}</Typography>

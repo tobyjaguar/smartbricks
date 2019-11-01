@@ -123,7 +123,7 @@ class SatisfyAuction extends Component {
     return (
       <div className="App">
       <Paper>
-        <Typography variant="h5" style={{padding: "10px"}}>Satisfy an Auction for a SmartPiggies Token</Typography>
+        <Typography variant="h5" style={{padding: "10px"}}>Satisfy an Auction for a SmartBrick Token</Typography>
         <Divider />
         <Table>
           <TableBody>
