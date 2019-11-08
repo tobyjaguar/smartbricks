@@ -85,9 +85,6 @@ typings/
 # Mac DS Store
 .DS_Store
 
-# node
-node_modules
-
 # Production
 build/
 build_webpack/
