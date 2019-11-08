@@ -32,9 +32,7 @@ let addressArray = [
   "Writer",
   "Holder",
   "Collateral Contract",
-  "Premium Contract",
-  "Oracle Resolver Now",
-  "Oracle Resolver at Expiry",
+  "Oracle Resolver",
 ]
 
 class AddressItem extends Component {
